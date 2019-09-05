@@ -8,18 +8,18 @@ typedef struct node
   int coeff;
   struct node *next;
 }node;
-node *phead=NULL,*qhead=NULL,*pptr,*qptr;
-void add(node* phead,node* qhead);
-void mul(node* phead,node*qhead);
+node *phead=NULL,*qhead=NULL,*pptr,*qptr,*shead=NULL,*sptr,*fhead,*fptr;
+void add();
+void mul();
 void enter(node* x);
 
 void main()
 {
   int ch,choice;
   printf("\nEnter 1st polynomial details:\n");
-  enter(p);
+  enter(phead);
   printf("Enter 2nd polynomial details:\n");
-  enter(q);
+  enter(qhead);
   do
     {
       printf("\nMENU\n1)ADD\n2)MULTIPY\nChoose your option:\n");
@@ -37,9 +37,16 @@ void main()
 	    }
 	  break;
 	case 2:mul();
+	  fptr=fhead;
+	  while(fptr!=NULL)
+	    {
+	      printf("(%dx^%d)+",fptr->coeff,fptr->exp);
+	      if(sptr->next==NULL)
+		printf("(%dx^%d)",fptr->coeff,fptr->exp);
+	      fptr=fptr->next;
+	    }
 	  break;
 	default:printf("error");
-	  exit();
 	}
       printf("\nDo you want to continue(1/0):");
       scanf("%d",&choice);
@@ -54,11 +61,11 @@ void enter(node*x)
   newnode=(node*)malloc(sizeof(phead));
   printf("\nEnter degree:\n");
   scanf("%d",&deg);
-  for(int i=deg;i>=1,i--)
+  for(int i=deg;i>=1;i--)
     {
       newnode->exp=i;
       printf("Enter coefficient of degree %d:",i);
-      scanf(%d,&newnode->coeff);
+      scanf("%d",&newnode->coeff);
       if(x==NULL)
 	{
 	  x=newnode;
@@ -75,7 +82,7 @@ void enter(node*x)
 
 void add()
 {
-  node*shead=NULL,*sptr,*newnode;
+  node *newnode;
   newnode=(node*)malloc(sizeof(phead));
   sptr=shead;
   pptr=phead;
@@ -97,7 +104,7 @@ void add()
       if(qptr->exp==pptr->exp)
    	{
 	  newnode->coeff=pptr->coeff+qptr->coeff;
-	  sptr->newt=newnode;
+	  sptr->next=newnode;
 	  newnode->next=NULL;
 	}
       pptr=pptr->next;
@@ -108,7 +115,7 @@ void add()
 
 void mul()
 {
-  node*zhead,*zptr,*k,*khead,*kptr,*fhead,*fptr;
+  node*zhead,*zptr,*k,*khead,*kptr;
   zptr=zhead;
   pptr=phead;
   kptr=khead;
@@ -144,7 +151,25 @@ void mul()
   while (kptr!=NULL)
     {
       zptr=kptr->next;
-      
+      node*temp=kptr;
+      while(zptr!=NULL)
+	{
+	  if(zptr->exp<kptr->exp)
+	    {
+	      temp->exp=zptr->exp;
+	      temp->coeff=zptr->coeff;
+	      temp->next=zptr->next;
+	    }
+	  zptr=zptr->next;
+	}
+      fhead=fptr;
+      fptr=temp;
+      fptr=fptr->next;
+      kptr=kptr->next;
+    }
+}
+	  
+	  
   
       
       
